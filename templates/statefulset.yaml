@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "k3s-ha.fullname" . }}
+  labels:
+    {{- include "k3s-ha.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "k3s-ha.fullname" . }}-headless
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "k3s-ha.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "k3s-ha.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- if .Values.hostNetwork.enabled }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- end }}
+
+      {{- if and .Values.antiAffinity.enabled (not .Values.affinity) }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: {{ include "k3s-ha.name" . }}
+                  app.kubernetes.io/instance: {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- end }}
+
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      containers:
+        - name: k3s
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          securityContext:
+            privileged: {{ .Values.securityContext.privileged }}
+
+          env:
+            - name: K3S_TOKEN
+              value: {{ .Values.token.value | quote }}
+
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail
+
+              NAME="$(hostname)"
+              ORDINAL="${NAME##*-}"
+
+              HEADLESS="{{ include "k3s-ha.fullname" . }}-headless"
+              NS="{{ .Release.Namespace }}"
+              JOIN_URL="https://{{ include "k3s-ha.fullname" . }}-0.${HEADLESS}.${NS}.svc.cluster.local:6443"
+
+              EXTRA_ARGS=""
+              {{- range .Values.k3s.extraArgs }}
+              EXTRA_ARGS="$EXTRA_ARGS {{ . }}"
+              {{- end }}
+
+              TLS_SANS=""
+              {{- range .Values.k3s.tlsSANs }}
+              TLS_SANS="$TLS_SANS --tls-san {{ . }}"
+              {{- end }}
+
+              if [ "$ORDINAL" = "0" ]; then
+                echo "Starting k3s server-0 with --cluster-init"
+                exec k3s server \
+                  --cluster-init \
+                  --token "$K3S_TOKEN" \
+                  $TLS_SANS \
+                  $EXTRA_ARGS
+              else
+                echo "Starting k3s server-$ORDINAL joining: $JOIN_URL"
+                exec k3s server \
+                  --server "$JOIN_URL" \
+                  --token "$K3S_TOKEN" \
+                  $TLS_SANS \
+                  $EXTRA_ARGS
+              fi
+
+          ports:
+            - name: https
+              containerPort: 6443
+              protocol: TCP
+
+          volumeMounts:
+            - name: k3s-data
+              mountPath: /var/lib/rancher/k3s
+
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: k3s-data
+      spec:
+        accessModes:
+          {{- toYaml .Values.persistence.accessModes | nindent 10 }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+        {{- if .Values.persistence.storageClassName }}
+        storageClassName: {{ .Values.persistence.storageClassName | quote }}
+        {{- end }}
+  {{- end }}

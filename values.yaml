@@ -1,0 +1,75 @@
+replicaCount: 3
+
+image:
+  repository: rancher/k3s
+  tag: v1.29.7-k3s1
+  pullPolicy: IfNotPresent
+
+token:
+  # IMPORTANT: replace with something real (or template a Secret)
+  value: "super-secret-k3s-token"
+
+# ------------------------------------------------------------
+# API Service (k3s Kubernetes API on :6443)
+# ------------------------------------------------------------
+service:
+  api:
+    enabled: true
+    type: ClusterIP  # ClusterIP | LoadBalancer | NodePort
+    port: 6443
+
+    # If type=LoadBalancer, these can be used
+    annotations: {}
+    loadBalancerSourceRanges: []  # e.g. ["1.2.3.4/32"]
+    externalTrafficPolicy: Cluster
+
+# Headless service used for stable DNS identity in StatefulSet
+serviceHeadless:
+  port: 6443
+
+# ------------------------------------------------------------
+# Persistence (required for embedded etcd HA)
+# ------------------------------------------------------------
+persistence:
+  enabled: true
+  size: 20Gi
+  storageClassName: "" # "" uses default StorageClass
+  accessModes:
+    - ReadWriteOnce
+
+# ------------------------------------------------------------
+# Scheduling / security
+# ------------------------------------------------------------
+securityContext:
+  privileged: true
+
+hostNetwork:
+  enabled: true
+
+antiAffinity:
+  enabled: true
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# ------------------------------------------------------------
+# k3s server options
+# ------------------------------------------------------------
+k3s:
+  # Extra args passed to k3s server
+  extraArgs:
+    - "--write-kubeconfig-mode=644"
+    # You can disable built-ins if you want:
+    # - "--disable=traefik"
+    # - "--disable=servicelb"
+    # - "--disable=metrics-server"
+
+  # TLS SANs for API server certificate.
+  # If you expose via LoadBalancer, add the LB DNS name (or your custom DNS)
+  tlsSANs: []
+  # Example:
+  # tlsSANs:
+  #   - "k3s-api.example.com"
+  #   - "a1b2c3d4e5f6.elb.amazonaws.com"

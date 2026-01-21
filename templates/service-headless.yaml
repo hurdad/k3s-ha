@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "k3s-ha.fullname" . }}-headless
+  labels:
+    {{- include "k3s-ha.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: {{ include "k3s-ha.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - name: https
+      port: {{ .Values.serviceHeadless.port }}
+      targetPort: 6443
+      protocol: TCP
