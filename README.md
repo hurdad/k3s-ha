@@ -34,7 +34,7 @@ helm uninstall k3s-ha -n k3s-ha
 | --- | --- | --- |
 | `replicaCount` | Number of k3s server replicas | `3` |
 | `image.repository` | k3s image repository | `rancher/k3s` |
-| `image.tag` | k3s image tag | `v1.29.7-k3s1` |
+| `image.tag` | k3s image tag | `v1.35.0-k3s1` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `token.value` | Shared k3s server token (required) | `"super-secret-k3s-token"` |
 | `service.api.enabled` | Expose the Kubernetes API service | `true` |

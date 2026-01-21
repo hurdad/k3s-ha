@@ -2,7 +2,7 @@ replicaCount: 3
 
 image:
   repository: rancher/k3s
-  tag: v1.29.7-k3s1
+  tag: v1.35.0-k3s1
   pullPolicy: IfNotPresent
 
 token:
