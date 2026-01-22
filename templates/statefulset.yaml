@@ -71,7 +71,8 @@ spec:
 
               HEADLESS="{{ include "k3s-ha.fullname" . }}-headless"
               NS="{{ .Release.Namespace }}"
-              JOIN_URL="https://{{ include "k3s-ha.fullname" . }}-0.${HEADLESS}.${NS}.svc.cluster.local:6443"
+              JOIN_HOST="{{ include "k3s-ha.fullname" . }}-0.${HEADLESS}.${NS}.svc.cluster.local"
+              JOIN_URL="https://${JOIN_HOST}:6443"
 
               EXTRA_ARGS=""
               {{- range .Values.k3s.extraArgs }}
@@ -92,7 +93,7 @@ spec:
                   $EXTRA_ARGS
               else
                 echo "Starting k3s server-$ORDINAL joining: $JOIN_URL"
-                until wget -q --spider "$JOIN_URL/cacerts"; do
+                until nc -z -w 1 "$JOIN_HOST" 6443; do
                   echo "Waiting for API at $JOIN_URL to become available..."
                   sleep 2
                 done
