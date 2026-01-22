@@ -2,7 +2,7 @@ replicaCount: 3
 
 image:
   repository: rancher/k3s
-  tag: v1.35.0-k3s1
+  tag: v1.34.3-k3s1
   pullPolicy: IfNotPresent
 
 token:
@@ -16,7 +16,7 @@ service:
   api:
     enabled: true
     type: ClusterIP  # ClusterIP | LoadBalancer | NodePort
-    port: 7443
+    port: 6443
 
     # If type=LoadBalancer, these can be used
     annotations: {}
