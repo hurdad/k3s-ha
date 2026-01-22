@@ -12,5 +12,5 @@ spec:
   ports:
     - name: https
       port: {{ .Values.serviceHeadless.port }}
-      targetPort: 6443
+      targetPort: {{ .Values.k3s.apiPort }}
       protocol: TCP

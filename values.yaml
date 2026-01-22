@@ -84,6 +84,8 @@ probes:
 # k3s server options
 # ------------------------------------------------------------
 k3s:
+  # HTTPS port for the Kubernetes API server (must match services and join URL)
+  apiPort: 6443
   # Extra args passed to k3s server
   extraArgs:
     - "--write-kubeconfig-mode=644"

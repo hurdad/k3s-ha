@@ -77,12 +77,14 @@ spec:
               HEADLESS="{{ include "k3s-ha.fullname" . }}-headless"
               NS="{{ .Release.Namespace }}"
               JOIN_HOST="{{ include "k3s-ha.fullname" . }}-0.${HEADLESS}.${NS}.svc.cluster.local"
-              JOIN_URL="https://${JOIN_HOST}:6443"
+              API_PORT="{{ .Values.k3s.apiPort }}"
+              JOIN_URL="https://${JOIN_HOST}:${API_PORT}"
 
               EXTRA_ARGS=""
               {{- range .Values.k3s.extraArgs }}
               EXTRA_ARGS="$EXTRA_ARGS {{ . }}"
               {{- end }}
+              EXTRA_ARGS="$EXTRA_ARGS --https-listen-port=${API_PORT}"
 
               TLS_SANS=""
               {{- range .Values.k3s.tlsSANs }}
@@ -114,7 +116,7 @@ spec:
 
           ports:
             - name: https
-              containerPort: 6443
+              containerPort: {{ .Values.k3s.apiPort }}
               protocol: TCP
 
           {{- if .Values.probes.enabled }}

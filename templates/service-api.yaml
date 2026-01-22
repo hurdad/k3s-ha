@@ -17,7 +17,7 @@ spec:
   ports:
     - name: https
       port: {{ .Values.service.api.port }}
-      targetPort: 6443
+      targetPort: {{ .Values.k3s.apiPort }}
       protocol: TCP
 
   {{- if eq .Values.service.api.type "LoadBalancer" }}
