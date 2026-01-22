@@ -3,4 +3,4 @@ name: k3s-ha
 description: Run k3s server (embedded etcd) in HA mode as a StatefulSet
 type: application
 version: 0.2.0
-appVersion: "v1.35.0-k3s1"
+appVersion: "v1.34.3-k3s1"
