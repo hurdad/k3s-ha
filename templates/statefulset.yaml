@@ -57,6 +57,10 @@ spec:
             privileged: {{ .Values.securityContext.privileged }}
 
           env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: K3S_TOKEN
               value: {{ .Values.token.value | quote }}
 
@@ -66,7 +70,7 @@ spec:
             - |
               set -euo pipefail
 
-              NAME="${HOSTNAME:-$(hostname)}"
+              NAME="${POD_NAME:-${HOSTNAME:-$(hostname)}}"
               NAME="${NAME%%.*}"
               ORDINAL="${NAME##*-}"
 
