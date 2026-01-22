@@ -10,13 +10,13 @@ token:
   value: "super-secret-k3s-token"
 
 # ------------------------------------------------------------
-# API Service (k3s Kubernetes API on :6443)
+# API Service (k3s Kubernetes API on :7443)
 # ------------------------------------------------------------
 service:
   api:
     enabled: true
     type: ClusterIP  # ClusterIP | LoadBalancer | NodePort
-    port: 6443
+    port: 7443
 
     # If type=LoadBalancer, these can be used
     annotations: {}
