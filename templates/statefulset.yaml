@@ -100,13 +100,6 @@ spec:
                   $EXTRA_ARGS
               else
                 echo "Starting k3s server-$ORDINAL joining: $JOIN_URL"
-                until KUBECONFIG=/dev/null k3s kubectl \
-                  --server "$JOIN_URL" \
-                  --insecure-skip-tls-verify=true \
-                  get --raw=/healthz >/dev/null 2>&1; do
-                  echo "Waiting for API at $JOIN_URL/healthz to become available..."
-                  sleep 2
-                done
                 exec k3s server \
                   --server "$JOIN_URL" \
                   --token "$K3S_TOKEN" \
