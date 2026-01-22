@@ -55,6 +55,32 @@ tolerations: []
 affinity: {}
 
 # ------------------------------------------------------------
+# Probes
+# ------------------------------------------------------------
+probes:
+  enabled: true
+
+  liveness:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+  readiness:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 5
+    failureThreshold: 6
+    successThreshold: 1
+
+  startup:
+    enabled: true
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 30
+
+# ------------------------------------------------------------
 # k3s server options
 # ------------------------------------------------------------
 k3s:

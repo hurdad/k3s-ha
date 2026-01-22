@@ -55,6 +55,11 @@ helm uninstall k3s-ha -n k3s-ha
 | `nodeSelector` | Node selector | `{}` |
 | `tolerations` | Pod tolerations | `[]` |
 | `affinity` | Pod affinity rules | `{}` |
+| `probes.enabled` | Enable container health probes | `true` |
+| `probes.liveness` | Liveness probe settings | See `values.yaml` |
+| `probes.readiness` | Readiness probe settings | See `values.yaml` |
+| `probes.startup.enabled` | Enable startup probe | `true` |
+| `probes.startup` | Startup probe settings | See `values.yaml` |
 | `k3s.extraArgs` | Extra args for `k3s server` | `['--write-kubeconfig-mode=644']` |
 | `k3s.tlsSANs` | Additional TLS SANs for the API server cert | `[]` |
 
