@@ -1,12 +1,12 @@
 # k3s-ha Helm Chart
 
-Run a highly available k3s server (embedded etcd) as a Kubernetes StatefulSet.
+Run a highly available k3s server as a Kubernetes StatefulSet backed by an external datastore.
 
 ## Prerequisites
 
 - Kubernetes cluster with enough nodes for the desired replica count
 - Helm v3
-- A persistent storage class (or set `persistence.enabled=false` to use emptyDir)
+- A persistent storage class (optional if you want PVCs for local state)
 
 ## Install
 
@@ -44,7 +44,7 @@ helm uninstall k3s-ha -n k3s-ha
 | `service.api.loadBalancerSourceRanges` | Allowed source ranges | `[]` |
 | `service.api.externalTrafficPolicy` | External traffic policy | `Cluster` |
 | `serviceHeadless.port` | Headless service port | `6443` |
-| `persistence.enabled` | Enable PVCs for embedded etcd | `true` |
+| `persistence.enabled` | Enable PVCs for local state | `true` |
 | `persistence.size` | PVC size | `20Gi` |
 | `persistence.storageClassName` | Storage class name | `""` |
 | `persistence.accessModes` | PVC access modes | `[ReadWriteOnce]` |
@@ -62,9 +62,15 @@ helm uninstall k3s-ha -n k3s-ha
 | `probes.startup` | Startup probe settings | See `values.yaml` |
 | `k3s.apiPort` | HTTPS port for the Kubernetes API server | `6443` |
 | `k3s.extraArgs` | Extra args for `k3s server` | `['--write-kubeconfig-mode=644']` |
+| `k3s.datastore.endpoint` | External datastore endpoint (required) | `""` |
+| `k3s.datastore.cafile` | Datastore TLS CA file path | `""` |
+| `k3s.datastore.certfile` | Datastore TLS certificate file path | `""` |
+| `k3s.datastore.keyfile` | Datastore TLS key file path | `""` |
 | `k3s.tlsSANs` | Additional TLS SANs for the API server cert | `[]` |
 
 ## Notes
 
-- Replace `token.value` with your own secure token or template it from a Secret.
+- Replace `token.value` with your own secure token; the chart stores it in a Kubernetes Secret.
 - If you expose the API via a LoadBalancer, add the DNS name to `k3s.tlsSANs`.
+- This chart requires `k3s.datastore.endpoint` (embedded etcd is not supported).
+- Consider disabling `persistence.enabled` if you don't need local state.

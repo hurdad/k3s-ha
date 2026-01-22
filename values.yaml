@@ -28,7 +28,7 @@ serviceHeadless:
   port: 6443
 
 # ------------------------------------------------------------
-# Persistence (required for embedded etcd HA)
+# Persistence (optional for external datastore deployments)
 # ------------------------------------------------------------
 persistence:
   enabled: true
@@ -93,6 +93,12 @@ k3s:
     # - "--disable=traefik"
     # - "--disable=servicelb"
     # - "--disable=metrics-server"
+  # External datastore configuration (required for this chart)
+  datastore:
+    endpoint: ""
+    cafile: ""
+    certfile: ""
+    keyfile: ""
 
   # TLS SANs for API server certificate.
   # If you expose via LoadBalancer, add the LB DNS name (or your custom DNS)

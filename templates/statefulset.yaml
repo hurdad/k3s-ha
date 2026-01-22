@@ -1,3 +1,6 @@
+{{- if eq .Values.k3s.datastore.endpoint "" }}
+{{- fail "k3s.datastore.endpoint must be set to run this chart (external datastore required)." }}
+{{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -62,50 +65,48 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: K3S_TOKEN
-              value: {{ .Values.token.value | quote }}
-
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "k3s-ha.fullname" . }}-token
+                  key: token
+            - name: K3S_HTTPS_LISTEN_PORT
+              value: {{ .Values.k3s.apiPort | quote }}
+            - name: K3S_DATASTORE_ENDPOINT
+              value: {{ .Values.k3s.datastore.endpoint | quote }}
+            - name: K3S_DATA_DIR
+              value: /var/lib/rancher/k3s
+            {{- if .Values.k3s.datastore.cafile }}
+            - name: K3S_DATASTORE_CAFILE
+              value: {{ .Values.k3s.datastore.cafile | quote }}
+            {{- end }}
+            {{- if .Values.k3s.datastore.certfile }}
+            - name: K3S_DATASTORE_CERTFILE
+              value: {{ .Values.k3s.datastore.certfile | quote }}
+            {{- end }}
+            {{- if .Values.k3s.datastore.keyfile }}
+            - name: K3S_DATASTORE_KEYFILE
+              value: {{ .Values.k3s.datastore.keyfile | quote }}
+            {{- end }}
           command:
             - /bin/sh
             - -c
             - |
               set -euo pipefail
 
-              NAME="${POD_NAME:-${HOSTNAME:-$(hostname)}}"
-              NAME="${NAME%%.*}"
-              ORDINAL="${NAME##*-}"
-
-              HEADLESS="{{ include "k3s-ha.fullname" . }}-headless"
-              NS="{{ .Release.Namespace }}"
-              JOIN_HOST="{{ include "k3s-ha.fullname" . }}-0.${HEADLESS}.${NS}.svc.cluster.local"
-              API_PORT="{{ .Values.k3s.apiPort }}"
-              JOIN_URL="https://${JOIN_HOST}:${API_PORT}"
-
               EXTRA_ARGS=""
               {{- range .Values.k3s.extraArgs }}
               EXTRA_ARGS="$EXTRA_ARGS {{ . }}"
               {{- end }}
-              EXTRA_ARGS="$EXTRA_ARGS --https-listen-port=${API_PORT}"
 
               TLS_SANS=""
               {{- range .Values.k3s.tlsSANs }}
               TLS_SANS="$TLS_SANS --tls-san {{ . }}"
               {{- end }}
 
-              if [ "$ORDINAL" = "0" ]; then
-                echo "Starting k3s server-0 with --cluster-init"
-                exec k3s server \
-                  --cluster-init \
-                  --token "$K3S_TOKEN" \
-                  $TLS_SANS \
-                  $EXTRA_ARGS
-              else
-                echo "Starting k3s server-$ORDINAL joining: $JOIN_URL"
-                exec k3s server \
-                  --server "$JOIN_URL" \
-                  --token "$K3S_TOKEN" \
-                  $TLS_SANS \
-                  $EXTRA_ARGS
-              fi
+              echo "Starting k3s server with external datastore"
+              exec k3s server \
+                $TLS_SANS \
+                $EXTRA_ARGS
 
           ports:
             - name: https
