@@ -92,6 +92,10 @@ spec:
                   $EXTRA_ARGS
               else
                 echo "Starting k3s server-$ORDINAL joining: $JOIN_URL"
+                until wget -q --spider "$JOIN_URL/cacerts"; do
+                  echo "Waiting for API at $JOIN_URL to become available..."
+                  sleep 2
+                done
                 exec k3s server \
                   --server "$JOIN_URL" \
                   --token "$K3S_TOKEN" \
