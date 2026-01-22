@@ -93,8 +93,11 @@ spec:
                   $EXTRA_ARGS
               else
                 echo "Starting k3s server-$ORDINAL joining: $JOIN_URL"
-                until wget -q --spider --timeout=1 --no-check-certificate "$JOIN_URL"; do
-                  echo "Waiting for API at $JOIN_URL to become available..."
+                until KUBECONFIG=/dev/null k3s kubectl \
+                  --server "$JOIN_URL" \
+                  --insecure-skip-tls-verify=true \
+                  get --raw=/healthz >/dev/null 2>&1; do
+                  echo "Waiting for API at $JOIN_URL/healthz to become available..."
                   sleep 2
                 done
                 exec k3s server \
