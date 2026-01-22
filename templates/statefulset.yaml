@@ -108,6 +108,35 @@ spec:
               containerPort: 6443
               protocol: TCP
 
+          {{- if .Values.probes.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: https
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+            successThreshold: {{ .Values.probes.liveness.successThreshold }}
+
+          readinessProbe:
+            tcpSocket:
+              port: https
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+            successThreshold: {{ .Values.probes.readiness.successThreshold }}
+
+          {{- if .Values.probes.startup.enabled }}
+          startupProbe:
+            tcpSocket:
+              port: https
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+          {{- end }}
+          {{- end }}
+
           volumeMounts:
             - name: k3s-data
               mountPath: /var/lib/rancher/k3s
