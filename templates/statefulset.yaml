@@ -93,7 +93,7 @@ spec:
                   $EXTRA_ARGS
               else
                 echo "Starting k3s server-$ORDINAL joining: $JOIN_URL"
-                until nc -z -w 1 "$JOIN_HOST" 6443; do
+                until wget -q --spider --timeout=1 --no-check-certificate "$JOIN_URL"; do
                   echo "Waiting for API at $JOIN_URL to become available..."
                   sleep 2
                 done
