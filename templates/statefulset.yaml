@@ -67,8 +67,8 @@ spec:
             - name: K3S_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "k3s-server.fullname" . }}-token
-                  key: token
+                  name: {{ default (printf "%s-token" (include "k3s-server.fullname" .)) .Values.token.existingSecret.name }}
+                  key: {{ default "token" .Values.token.existingSecret.key }}
             - name: K3S_HTTPS_LISTEN_PORT
               value: {{ .Values.k3s.apiPort | quote }}
             - name: K3S_DATASTORE_ENDPOINT
