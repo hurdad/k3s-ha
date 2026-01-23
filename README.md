@@ -71,6 +71,7 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 | `probes.startup.enabled` | Enable startup probe | `true` |
 | `probes.startup` | Startup probe settings | See `values.yaml` |
 | `k3s.apiPort` | HTTPS port for the Kubernetes API server | `6443` |
+| `k3s.debug` | Enable verbose k3s logging via `K3S_DEBUG` | `false` |
 | `k3s.extraArgs` | Extra args for `k3s server` | `['--write-kubeconfig-mode=644']` |
 | `k3s.datastore.endpoint` | External datastore endpoint (required) | `""` |
 | `k3s.datastore.cafile` | Datastore TLS CA file path | `""` |
