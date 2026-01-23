@@ -110,6 +110,10 @@ spec:
               EXTRA_ARGS="$EXTRA_ARGS {{ . }}"
               {{- end }}
 
+              {{- if not .Values.k3s.debug }}
+              unset K3S_DEBUG
+              {{- end }}
+
               TLS_SANS=""
               {{- range .Values.k3s.tlsSANs }}
               TLS_SANS="$TLS_SANS --tls-san {{ . }}"
