@@ -79,8 +79,6 @@ spec:
                 secretKeyRef:
                   name: {{ default (printf "%s-token" (include "k3s-server.fullname" .)) $existingSecret.name }}
                   key: {{ default "token" $existingSecret.key }}
-            - name: K3S_HTTPS_LISTEN_PORT
-              value: {{ .Values.k3s.apiPort | quote }}
             - name: K3S_DATASTORE_ENDPOINT
               value: {{ .Values.k3s.datastore.endpoint | quote }}
             - name: K3S_DATA_DIR
@@ -115,6 +113,7 @@ spec:
 
               echo "Starting k3s server with external datastore"
               exec k3s server \
+                --https-listen-port {{ .Values.k3s.apiPort }} \
                 $TLS_SANS \
                 $EXTRA_ARGS
 
