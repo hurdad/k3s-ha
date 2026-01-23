@@ -20,7 +20,7 @@ service:
   api:
     enabled: true
     type: ClusterIP  # ClusterIP | LoadBalancer | NodePort
-    port: 6443
+    port: 7443
 
     # If type=LoadBalancer, these can be used
     annotations: {}
@@ -29,7 +29,7 @@ service:
 
 # Headless service used for stable DNS identity in StatefulSet
 serviceHeadless:
-  port: 6443
+  port: 7443
 
 # ------------------------------------------------------------
 # Persistence (optional for external datastore deployments)
