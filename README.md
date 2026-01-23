@@ -65,11 +65,11 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 | `nodeSelector` | Node selector | `{}` |
 | `tolerations` | Pod tolerations | `[]` |
 | `affinity` | Pod affinity rules | `{}` |
-| `probes.enabled` | Enable container health probes | `true` |
-| `probes.liveness` | Liveness probe settings | See `values.yaml` |
-| `probes.readiness` | Readiness probe settings | See `values.yaml` |
-| `probes.startup.enabled` | Enable startup probe | `true` |
-| `probes.startup` | Startup probe settings | See `values.yaml` |
+| `healthChecks.enabled` | Enable container health checks | `true` |
+| `healthChecks.liveness` | Liveness check settings | See `values.yaml` |
+| `healthChecks.readiness` | Readiness check settings | See `values.yaml` |
+| `healthChecks.startup.enabled` | Enable startup check | `true` |
+| `healthChecks.startup` | Startup check settings | See `values.yaml` |
 | `k3s.apiPort` | HTTPS port for the Kubernetes API server | `6443` |
 | `k3s.extraArgs` | Extra args for `k3s server` | `['--write-kubeconfig-mode=644']` |
 | `k3s.datastore.endpoint` | External datastore endpoint (required) | `""` |
