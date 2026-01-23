@@ -58,7 +58,6 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 | `persistence.storageClassName` | Storage class name | `""` |
 | `persistence.accessModes` | PVC access modes | `[ReadWriteOnce]` |
 | `securityContext.privileged` | Run the k3s server container privileged | `true` |
-| `hostNetwork.enabled` | Enable host networking | `true` |
 | `antiAffinity.enabled` | Spread pods across nodes | `true` |
 | `resources` | Pod resources | `{requests: {cpu: 250m, memory: 512Mi}, limits: {cpu: 1000m, memory: 1Gi}}` |
 | `nodeSelector` | Node selector | `{}` |

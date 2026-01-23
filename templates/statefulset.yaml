@@ -23,11 +23,6 @@ spec:
       annotations:
         {{- include "k3s-server.annotations" . | nindent 8 }}
     spec:
-      {{- if .Values.hostNetwork.enabled }}
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
-      {{- end }}
-
       {{- if and .Values.antiAffinity.enabled (not .Values.affinity) }}
       affinity:
         podAntiAffinity:
