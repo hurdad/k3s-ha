@@ -1,4 +1,4 @@
-# k3s-ha Helm Chart
+# helm-k3s-server Helm Chart
 
 Run a highly available k3s server as a Kubernetes StatefulSet backed by an external datastore.
 
@@ -12,20 +12,20 @@ Run a highly available k3s server as a Kubernetes StatefulSet backed by an exter
 
 ```sh
 helm repo add local .
-helm install k3s-ha ./ -n k3s-ha --create-namespace \
+helm install helm-k3s-server ./ -n helm-k3s-server --create-namespace \
   --set token.value="<your-k3s-token>"
 ```
 
 ## Upgrade
 
 ```sh
-helm upgrade k3s-ha ./ -n k3s-ha --set token.value="<your-k3s-token>"
+helm upgrade helm-k3s-server ./ -n helm-k3s-server --set token.value="<your-k3s-token>"
 ```
 
 ## Uninstall
 
 ```sh
-helm uninstall k3s-ha -n k3s-ha
+helm uninstall helm-k3s-server -n helm-k3s-server
 ```
 
 ## Configuration
