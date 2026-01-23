@@ -92,10 +92,6 @@ healthChecks:
 k3s:
   # HTTPS port for the Kubernetes API server (must match services and join URL)
   apiPort: 6443
-  # Advertise address/port for the API server (optional).
-  # If unset, defaults to the pod's DNS name via the headless Service and apiPort.
-  advertiseAddress: ""
-  advertisePort: ""
   # Enable verbose k3s logging (K3S_DEBUG)
   debug: false
   # Extra args passed to k3s server
