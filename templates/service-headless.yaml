@@ -4,6 +4,8 @@ metadata:
   name: {{ include "k3s-server.fullname" . }}-headless
   labels:
     {{- include "k3s-server.labels" . | nindent 4 }}
+  annotations:
+    {{- include "k3s-server.annotations" . | nindent 4 }}
 spec:
   clusterIP: None
   selector:

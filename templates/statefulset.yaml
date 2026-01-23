@@ -7,6 +7,8 @@ metadata:
   name: {{ include "k3s-server.fullname" . }}
   labels:
     {{- include "k3s-server.labels" . | nindent 4 }}
+  annotations:
+    {{- include "k3s-server.annotations" . | nindent 4 }}
 spec:
   serviceName: {{ include "k3s-server.fullname" . }}-headless
   replicas: {{ .Values.replicaCount }}
@@ -17,8 +19,9 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "k3s-server.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "k3s-server.labels" . | nindent 8 }}
+      annotations:
+        {{- include "k3s-server.annotations" . | nindent 8 }}
     spec:
       {{- if .Values.hostNetwork.enabled }}
       hostNetwork: true
