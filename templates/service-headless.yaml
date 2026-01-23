@@ -8,6 +8,7 @@ metadata:
     {{- include "k3s-server.annotations" . | nindent 4 }}
 spec:
   clusterIP: None
+  publishNotReadyAddresses: true
   selector:
     app.kubernetes.io/name: {{ include "k3s-server.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
