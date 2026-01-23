@@ -119,9 +119,20 @@ spec:
               TLS_SANS="$TLS_SANS --tls-san {{ . }}"
               {{- end }}
 
+              ADVERTISE_ARGS=""
+              {{- $advertiseAddress := include "k3s-server.advertiseAddress" . }}
+              {{- if $advertiseAddress }}
+              ADVERTISE_ARGS="$ADVERTISE_ARGS --advertise-address {{ $advertiseAddress }}"
+              {{- end }}
+              {{- $advertisePort := include "k3s-server.advertisePort" . }}
+              {{- if $advertisePort }}
+              ADVERTISE_ARGS="$ADVERTISE_ARGS --advertise-port {{ $advertisePort }}"
+              {{- end }}
+
               echo "Starting k3s server with external datastore"
               exec k3s server \
                 --https-listen-port {{ .Values.k3s.apiPort }} \
+                $ADVERTISE_ARGS \
                 $TLS_SANS \
                 $EXTRA_ARGS
 

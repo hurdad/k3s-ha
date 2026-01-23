@@ -22,3 +22,35 @@ helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | 
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | quote }}
 {{- end -}}
+
+{{- define "k3s-server.apiServiceName" -}}
+{{- printf "%s-api" (include "k3s-server.fullname" .) -}}
+{{- end -}}
+
+{{- define "k3s-server.apiServiceHost" -}}
+{{- printf "%s.%s.svc" (include "k3s-server.apiServiceName" .) .Release.Namespace -}}
+{{- end -}}
+
+{{- define "k3s-server.headlessServiceName" -}}
+{{- include "k3s-server.fullname" . -}}
+{{- end -}}
+
+{{- define "k3s-server.headlessServiceHost" -}}
+{{- printf "%s.%s.svc" (include "k3s-server.headlessServiceName" .) .Release.Namespace -}}
+{{- end -}}
+
+{{- define "k3s-server.advertiseAddress" -}}
+{{- if .Values.k3s.advertiseAddress -}}
+{{- .Values.k3s.advertiseAddress -}}
+{{- else -}}
+{{- printf "${POD_NAME}.%s" (include "k3s-server.headlessServiceHost" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "k3s-server.advertisePort" -}}
+{{- if .Values.k3s.advertisePort -}}
+{{- .Values.k3s.advertisePort -}}
+{{- else -}}
+{{- .Values.k3s.apiPort -}}
+{{- end -}}
+{{- end -}}
