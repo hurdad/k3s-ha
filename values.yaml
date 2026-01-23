@@ -59,9 +59,9 @@ tolerations: []
 affinity: {}
 
 # ------------------------------------------------------------
-# Probes
+# Health checks
 # ------------------------------------------------------------
-probes:
+healthChecks:
   enabled: true
 
   liveness:
