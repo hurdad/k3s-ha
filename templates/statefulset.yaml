@@ -83,6 +83,10 @@ spec:
               value: {{ .Values.k3s.datastore.endpoint | quote }}
             - name: K3S_DATA_DIR
               value: /var/lib/rancher/k3s
+            {{- if .Values.k3s.debug }}
+            - name: K3S_DEBUG
+              value: "true"
+            {{- end }}
             {{- if .Values.k3s.datastore.cafile }}
             - name: K3S_DATASTORE_CAFILE
               value: {{ .Values.k3s.datastore.cafile | quote }}
