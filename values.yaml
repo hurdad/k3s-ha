@@ -43,9 +43,6 @@ persistence:
 securityContext:
   privileged: true
 
-hostNetwork:
-  enabled: true
-
 antiAffinity:
   enabled: true
 
