@@ -51,6 +51,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 
+      {{- if not .Values.persistence.enabled }}
+      volumes:
+        - name: k3s-data
+          emptyDir: {}
+      {{- end }}
+
       containers:
         - name: k3s
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
