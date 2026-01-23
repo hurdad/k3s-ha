@@ -10,7 +10,7 @@ metadata:
   annotations:
     {{- include "k3s-server.annotations" . | nindent 4 }}
 spec:
-  serviceName: {{ include "k3s-server.fullname" . }}-headless
+  serviceName: {{ include "k3s-server.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:

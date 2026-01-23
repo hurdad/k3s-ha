@@ -27,10 +27,6 @@ service:
     loadBalancerSourceRanges: []  # e.g. ["1.2.3.4/32"]
     externalTrafficPolicy: Cluster
 
-# Headless service used for stable DNS identity in StatefulSet
-serviceHeadless:
-  port: 7443
-
 # ------------------------------------------------------------
 # Persistence (optional for external datastore deployments)
 # ------------------------------------------------------------
