@@ -16,6 +16,14 @@ helm install helm-k3s-server ./ -n helm-k3s-server --create-namespace \
   --set token.value="<your-k3s-token>"
 ```
 
+If you already have a Secret with the token, reference it instead:
+
+```sh
+helm install helm-k3s-server ./ -n helm-k3s-server --create-namespace \
+  --set token.existingSecret.name="k3s-token" \
+  --set token.existingSecret.key="token"
+```
+
 ## Upgrade
 
 ```sh
@@ -37,6 +45,8 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 | `image.tag` | k3s image tag | `v1.34.3-k3s1` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
 | `token.value` | Shared k3s server token (required) | `"super-secret-k3s-token"` |
+| `token.existingSecret.name` | Use an existing Secret for the token | `""` |
+| `token.existingSecret.key` | Key name in the existing Secret | `"token"` |
 | `service.api.enabled` | Expose the Kubernetes API service | `true` |
 | `service.api.type` | Service type for API | `ClusterIP` |
 | `service.api.port` | API service port | `6443` |
@@ -71,6 +81,7 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 ## Notes
 
 - Replace `token.value` with your own secure token; the chart stores it in a Kubernetes Secret.
+- Prefer `token.existingSecret` in production so the token is never rendered into manifests or Helm release metadata.
 - If you expose the API via a LoadBalancer, add the DNS name to `k3s.tlsSANs`.
 - This chart requires `k3s.datastore.endpoint` (embedded etcd is not supported).
 - Consider disabling `persistence.enabled` if you don't need local state.

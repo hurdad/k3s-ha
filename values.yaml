@@ -8,6 +8,10 @@ image:
 token:
   # IMPORTANT: replace with something real (or template a Secret)
   value: "super-secret-k3s-token"
+  # Use an existing Secret instead of creating one from token.value
+  # existingSecret:
+  #   name: ""
+  #   key: "token"
 
 # ------------------------------------------------------------
 # API Service (k3s Kubernetes API on :7443)
