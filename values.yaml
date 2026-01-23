@@ -92,6 +92,8 @@ healthChecks:
 k3s:
   # HTTPS port for the Kubernetes API server (must match services and join URL)
   apiPort: 6443
+  # Load balancer server port for k3s agents
+  lbServerPort: 6444
   # Enable verbose k3s logging (K3S_DEBUG)
   debug: false
   # Extra args passed to k3s server

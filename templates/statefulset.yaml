@@ -83,6 +83,8 @@ spec:
               value: {{ .Values.k3s.datastore.endpoint | quote }}
             - name: K3S_DATA_DIR
               value: /var/lib/rancher/k3s
+            - name: K3S_LB_SERVER_PORT
+              value: {{ .Values.k3s.lbServerPort | default 6444 | quote }}
             {{- if .Values.k3s.debug }}
             - name: K3S_DEBUG
               value: "true"
