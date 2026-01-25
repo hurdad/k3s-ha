@@ -22,3 +22,12 @@ helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | 
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | quote }}
 {{- end -}}
+
+{{- define "etcd.initialCluster" -}}
+{{- $replicaCount := int .Values.replicaCount -}}
+{{- $name := include "k3s-server.fullname" . -}}
+{{- range $i, $_ := until $replicaCount -}}
+{{- if $i }},{{- end -}}
+{{- printf "%s-%d=https://%s-%d.%s:2380" $name $i $name $i $name -}}
+{{- end -}}
+{{- end -}}
