@@ -135,7 +135,7 @@ spec:
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=listen-client-urls=https://0.0.0.0:2379,https://127.0.0.1:2379"
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=advertise-client-urls=https://$POD_NAME.{{ include "k3s-server.fullname" . }}:2379"
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=initial-advertise-peer-urls=https://$POD_NAME.{{ include "k3s-server.fullname" . }}:2380"
-              ETCD_ARGS="$ETCD_ARGS --etcd-arg=initial-cluster=$INITIAL_CLUSTER"
+{{/*              ETCD_ARGS="$ETCD_ARGS --etcd-arg=initial-cluster=$INITIAL_CLUSTER"*/}}
               {{- end }}
 
               SERVER_ARGS=""
