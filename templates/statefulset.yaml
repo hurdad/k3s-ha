@@ -1,5 +1,5 @@
-{{- if eq .Values.k3s.datastore.endpoint "" }}
-{{- fail "k3s.datastore.endpoint must be set to run this chart (external datastore required)." }}
+{{- if and (eq .Values.k3s.datastore.endpoint "") (not .Values.k3s.embeddedEtcd.enabled) }}
+{{- fail "k3s.datastore.endpoint must be set when embedded etcd is disabled." }}
 {{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -74,8 +74,10 @@ spec:
                 secretKeyRef:
                   name: {{ default (printf "%s-token" (include "k3s-server.fullname" .)) $existingSecret.name }}
                   key: {{ default "token" $existingSecret.key }}
+            {{- if not .Values.k3s.embeddedEtcd.enabled }}
             - name: K3S_DATASTORE_ENDPOINT
               value: {{ .Values.k3s.datastore.endpoint | quote }}
+            {{- end }}
             - name: K3S_DATA_DIR
               value: /var/lib/rancher/k3s
             - name: K3S_LB_SERVER_PORT
@@ -84,15 +86,15 @@ spec:
             - name: K3S_DEBUG
               value: "true"
             {{- end }}
-            {{- if .Values.k3s.datastore.cafile }}
+            {{- if and (not .Values.k3s.embeddedEtcd.enabled) .Values.k3s.datastore.cafile }}
             - name: K3S_DATASTORE_CAFILE
               value: {{ .Values.k3s.datastore.cafile | quote }}
             {{- end }}
-            {{- if .Values.k3s.datastore.certfile }}
+            {{- if and (not .Values.k3s.embeddedEtcd.enabled) .Values.k3s.datastore.certfile }}
             - name: K3S_DATASTORE_CERTFILE
               value: {{ .Values.k3s.datastore.certfile | quote }}
             {{- end }}
-            {{- if .Values.k3s.datastore.keyfile }}
+            {{- if and (not .Values.k3s.embeddedEtcd.enabled) .Values.k3s.datastore.keyfile }}
             - name: K3S_DATASTORE_KEYFILE
               value: {{ .Values.k3s.datastore.keyfile | quote }}
             {{- end }}
@@ -116,10 +118,23 @@ spec:
               TLS_SANS="$TLS_SANS --tls-san {{ . }}"
               {{- end }}
 
-              echo "Starting k3s server with external datastore"
+              SERVER_ARGS=""
+              {{- if .Values.k3s.embeddedEtcd.enabled }}
+              ORDINAL="${POD_NAME##*-}"
+              if [ "$ORDINAL" -eq 0 ]; then
+                echo "Initializing embedded etcd cluster"
+                SERVER_ARGS="--cluster-init"
+              else
+                echo "Joining embedded etcd cluster via headless service"
+                SERVER_ARGS="--server https://{{ include "k3s-server.fullname" . }}:{{ .Values.k3s.apiPort }}"
+              fi
+              {{- end }}
+
+              echo "Starting k3s server"
               exec k3s server \
                 --https-listen-port {{ .Values.k3s.apiPort }} \
                 $TLS_SANS \
+                $SERVER_ARGS \
                 $EXTRA_ARGS
 
           ports:

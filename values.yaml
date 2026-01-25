@@ -26,6 +26,9 @@ service:
     annotations: {}
     loadBalancerSourceRanges: []  # e.g. ["1.2.3.4/32"]
     externalTrafficPolicy: Cluster
+  headless:
+    enabled: true
+    annotations: {}
 
 # ------------------------------------------------------------
 # Persistence (optional for external datastore deployments)
@@ -106,6 +109,8 @@ k3s:
     cafile: ""
     certfile: ""
     keyfile: ""
+  embeddedEtcd:
+    enabled: false
 
   # TLS SANs for API server certificate.
   # If you expose via LoadBalancer, add the LB DNS name (or your custom DNS)
