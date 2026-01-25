@@ -122,8 +122,8 @@ spec:
 
               ETCD_ARGS=""
               {{- if .Values.k3s.embeddedEtcd.enabled }}
-{{/*              ETCD_ARGS="$ETCD_ARGS --etcd-arg=--initial-cluster={{ include "etcd.initialCluster" . }}"*/}}
-{{/*              ETCD_ARGS="$ETCD_ARGS --etcd-arg=--name=$(POD_NAME)"*/}}
+              ETCD_ARGS="$ETCD_ARGS --etcd-arg=initial-cluster={{ include "etcd.initialCluster" . }}"
+              ETCD_ARGS="$ETCD_ARGS --etcd-arg=name=$(POD_NAME)"
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=listen-peer-urls=https://0.0.0.0:2380,https://127.0.0.1:2380"
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=listen-client-urls=https://0.0.0.0:2379,https://127.0.0.1:2379"
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=advertise-client-urls=https://$POD_NAME.{{ include "k3s-server.fullname" . }}:2379"
