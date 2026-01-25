@@ -123,7 +123,7 @@ spec:
               {{- $peerScheme := .Values.k3s.embeddedEtcd.peerScheme }}
               {{- $clientScheme := .Values.k3s.embeddedEtcd.clientScheme }}
 {{/*              ETCD_ARGS="$ETCD_ARGS --etcd-arg=listen-peer-urls={{ $peerScheme }}://0.0.0.0:{{ .Values.k3s.embeddedEtcd.peerPort }}"*/}}
-{{/*              ETCD_ARGS="$ETCD_ARGS --etcd-arg=listen-client-urls={{ $clientScheme }}://0.0.0.0:{{ .Values.k3s.embeddedEtcd.grpcPort }}"*/}}
+              ETCD_ARGS="$ETCD_ARGS --etcd-arg=listen-client-urls=https://127.0.0.1:2379,https://0.0.0.0:2379"
 {{/*              ETCD_ARGS="$ETCD_ARGS --etcd-arg=listen-client-http-urls={{ $clientScheme }}://0.0.0.0:{{ .Values.k3s.embeddedEtcd.httpPort }}"*/}}
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=advertise-client-urls={{ $clientScheme }}://$POD_NAME.{{ include "k3s-server.fullname" . }}:{{ .Values.k3s.embeddedEtcd.grpcPort }}"
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=initial-advertise-peer-urls={{ $peerScheme }}://$POD_NAME.{{ include "k3s-server.fullname" . }}:{{ .Values.k3s.embeddedEtcd.peerPort }}"
