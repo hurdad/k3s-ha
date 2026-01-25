@@ -1,0 +1,24 @@
+{{- if .Values.service.headless.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "k3s-server.fullname" . }}
+  labels:
+    {{- include "k3s-server.labels" . | nindent 4 }}
+  annotations:
+    {{- include "k3s-server.annotations" . | nindent 4 }}
+    {{- with .Values.service.headless.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: {{ include "k3s-server.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - name: https
+      port: {{ .Values.k3s.apiPort }}
+      targetPort: {{ .Values.k3s.apiPort }}
+      protocol: TCP
+{{- end }}

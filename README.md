@@ -1,6 +1,6 @@
 # helm-k3s-server Helm Chart
 
-Run a highly available k3s server as a Kubernetes StatefulSet backed by an external datastore.
+Run a highly available k3s server as a Kubernetes StatefulSet backed by an external datastore or embedded etcd.
 
 ## Prerequisites
 
@@ -53,6 +53,8 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 | `service.api.annotations` | Service annotations | `{}` |
 | `service.api.loadBalancerSourceRanges` | Allowed source ranges | `[]` |
 | `service.api.externalTrafficPolicy` | External traffic policy | `Cluster` |
+| `service.headless.enabled` | Create a headless service for peer discovery | `true` |
+| `service.headless.annotations` | Headless service annotations | `{}` |
 | `persistence.enabled` | Enable PVCs for local state | `true` |
 | `persistence.size` | PVC size | `20Gi` |
 | `persistence.storageClassName` | Storage class name | `""` |
@@ -71,10 +73,11 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 | `k3s.apiPort` | HTTPS port for the Kubernetes API server | `6443` |
 | `k3s.debug` | Enable verbose k3s logging via `K3S_DEBUG` | `false` |
 | `k3s.extraArgs` | Extra args for `k3s server` | `['--write-kubeconfig-mode=644']` |
-| `k3s.datastore.endpoint` | External datastore endpoint (required) | `""` |
+| `k3s.datastore.endpoint` | External datastore endpoint (required when embedded etcd disabled) | `""` |
 | `k3s.datastore.cafile` | Datastore TLS CA file path | `""` |
 | `k3s.datastore.certfile` | Datastore TLS certificate file path | `""` |
 | `k3s.datastore.keyfile` | Datastore TLS key file path | `""` |
+| `k3s.embeddedEtcd.enabled` | Enable embedded etcd mode | `false` |
 | `k3s.tlsSANs` | Additional TLS SANs for the API server cert | `[]` |
 
 ## Notes
@@ -82,5 +85,5 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 - Replace `token.value` with your own secure token; the chart stores it in a Kubernetes Secret.
 - Prefer `token.existingSecret` in production so the token is never rendered into manifests or Helm release metadata.
 - If you expose the API via a LoadBalancer, add the DNS name to `k3s.tlsSANs`.
-- This chart requires `k3s.datastore.endpoint` (embedded etcd is not supported).
+- Set `k3s.embeddedEtcd.enabled=true` to use embedded etcd; otherwise, configure `k3s.datastore.endpoint` for an external datastore.
 - Consider disabling `persistence.enabled` if you don't need local state.
