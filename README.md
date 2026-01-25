@@ -93,5 +93,6 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 - Replace `token.value` with your own secure token; the chart stores it in a Kubernetes Secret.
 - Prefer `token.existingSecret` in production so the token is never rendered into manifests or Helm release metadata.
 - If you expose the API via a LoadBalancer, add the DNS name to `k3s.tlsSANs`.
+- The chart automatically adds each pod hostname and headless service DNS name to the API server TLS SANs for embedded etcd clustering.
 - Set `k3s.embeddedEtcd.enabled=true` to use embedded etcd; otherwise, configure `k3s.datastore.endpoint` for an external datastore.
 - Consider disabling `persistence.enabled` if you don't need local state.
