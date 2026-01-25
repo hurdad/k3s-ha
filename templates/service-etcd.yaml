@@ -1,0 +1,28 @@
+{{- if .Values.k3s.embeddedEtcd.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "k3s-server.fullname" . }}-etcd
+  labels:
+    {{- include "k3s-server.labels" . | nindent 4 }}
+  annotations:
+    {{- include "k3s-server.annotations" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: {{ include "k3s-server.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - name: etcd-client
+      port: 2739
+      targetPort: 2739
+      protocol: TCP
+    - name: etcd-peer
+      port: 2380
+      targetPort: 2380
+      protocol: TCP
+    - name: etcd-metrics
+      port: 2381
+      targetPort: 2381
+      protocol: TCP
+{{- end }}
