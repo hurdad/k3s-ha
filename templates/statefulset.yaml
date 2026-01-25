@@ -141,6 +141,17 @@ spec:
             - name: https
               containerPort: {{ .Values.k3s.apiPort }}
               protocol: TCP
+            {{- if .Values.k3s.embeddedEtcd.enabled }}
+            - name: etcd-client
+              containerPort: 2739
+              protocol: TCP
+            - name: etcd-peer
+              containerPort: 2380
+              protocol: TCP
+            - name: etcd-metrics
+              containerPort: 2381
+              protocol: TCP
+            {{- end }}
 
           {{- if .Values.healthChecks.enabled }}
           livenessProbe:
