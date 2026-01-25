@@ -7,8 +7,18 @@ metadata:
     {{- include "k3s-server.labels" . | nindent 4 }}
   annotations:
     {{- include "k3s-server.annotations" . | nindent 4 }}
+    {{- with .Values.k3s.embeddedEtcd.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.k3s.embeddedEtcd.service.type }}
+  {{- if and (eq .Values.k3s.embeddedEtcd.service.type "LoadBalancer") .Values.k3s.embeddedEtcd.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.k3s.embeddedEtcd.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if and (eq .Values.k3s.embeddedEtcd.service.type "LoadBalancer") .Values.k3s.embeddedEtcd.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.k3s.embeddedEtcd.service.externalTrafficPolicy }}
+  {{- end }}
   selector:
     app.kubernetes.io/name: {{ include "k3s-server.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

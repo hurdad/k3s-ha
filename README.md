@@ -78,6 +78,10 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 | `k3s.datastore.certfile` | Datastore TLS certificate file path | `""` |
 | `k3s.datastore.keyfile` | Datastore TLS key file path | `""` |
 | `k3s.embeddedEtcd.enabled` | Enable embedded etcd mode | `false` |
+| `k3s.embeddedEtcd.service.type` | Embedded etcd Service type | `ClusterIP` |
+| `k3s.embeddedEtcd.service.annotations` | Embedded etcd Service annotations | `{}` |
+| `k3s.embeddedEtcd.service.loadBalancerSourceRanges` | Embedded etcd LB source ranges | `[]` |
+| `k3s.embeddedEtcd.service.externalTrafficPolicy` | Embedded etcd LB traffic policy | `Cluster` |
 | `k3s.tlsSANs` | Additional TLS SANs for the API server cert | `[]` |
 
 ## Notes

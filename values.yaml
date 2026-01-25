@@ -111,6 +111,11 @@ k3s:
     keyfile: ""
   embeddedEtcd:
     enabled: false
+    service:
+      type: ClusterIP # ClusterIP | LoadBalancer | NodePort
+      annotations: {}
+      loadBalancerSourceRanges: [] # e.g. ["1.2.3.4/32"]
+      externalTrafficPolicy: Cluster
 
   # TLS SANs for API server certificate.
   # If you expose via LoadBalancer, add the LB DNS name (or your custom DNS)
