@@ -122,12 +122,10 @@ spec:
 
               ETCD_ARGS=""
               {{- if .Values.k3s.embeddedEtcd.enabled }}
-              {{- $peerScheme := .Values.k3s.embeddedEtcd.peerScheme }}
-              {{- $clientScheme := .Values.k3s.embeddedEtcd.clientScheme }}
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=listen-peer-urls=https://0.0.0.0:2380,https://127.0.0.1:2380"
               ETCD_ARGS="$ETCD_ARGS --etcd-arg=listen-client-urls=https://0.0.0.0:2379,https://127.0.0.1:2379"
-              ETCD_ARGS="$ETCD_ARGS --etcd-arg=advertise-client-urls={{ $clientScheme }}://$POD_NAME.{{ include "k3s-server.fullname" . }}:{{ .Values.k3s.embeddedEtcd.grpcPort }}"
-              ETCD_ARGS="$ETCD_ARGS --etcd-arg=initial-advertise-peer-urls={{ $peerScheme }}://$POD_NAME.{{ include "k3s-server.fullname" . }}:{{ .Values.k3s.embeddedEtcd.peerPort }}"
+              ETCD_ARGS="$ETCD_ARGS --etcd-arg=advertise-client-urls=https://$POD_NAME.{{ include "k3s-server.fullname" . }}:2379"
+              ETCD_ARGS="$ETCD_ARGS --etcd-arg=initial-advertise-peer-urls=https://$POD_NAME.{{ include "k3s-server.fullname" . }}:2380"
               {{- end }}
 
               SERVER_ARGS=""
@@ -156,13 +154,13 @@ spec:
               protocol: TCP
             {{- if .Values.k3s.embeddedEtcd.enabled }}
             - name: etcd-client
-              containerPort: {{ .Values.k3s.embeddedEtcd.grpcPort }}
+              containerPort: 2379
               protocol: TCP
             - name: etcd-peer
-              containerPort: {{ .Values.k3s.embeddedEtcd.peerPort }}
+              containerPort: 2380
               protocol: TCP
             - name: etcd-metrics
-              containerPort: {{ .Values.k3s.embeddedEtcd.httpPort }}
+              containerPort: 2381
               protocol: TCP
             {{- end }}
 
