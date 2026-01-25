@@ -114,6 +114,8 @@ spec:
               {{- end }}
 
               TLS_SANS=""
+              TLS_SANS="$TLS_SANS --tls-san $POD_NAME"
+              TLS_SANS="$TLS_SANS --tls-san $POD_NAME.{{ include "k3s-server.fullname" . }}"
               {{- range .Values.k3s.tlsSANs }}
               TLS_SANS="$TLS_SANS --tls-san {{ . }}"
               {{- end }}
