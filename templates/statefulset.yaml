@@ -118,6 +118,17 @@ spec:
               TLS_SANS="$TLS_SANS --tls-san {{ . }}"
               {{- end }}
 
+              ETCD_ARGS=""
+              {{- if .Values.k3s.embeddedEtcd.enabled }}
+              {{- $peerScheme := .Values.k3s.embeddedEtcd.peerScheme }}
+              {{- $clientScheme := .Values.k3s.embeddedEtcd.clientScheme }}
+              ETCD_ARGS="--etcd-arg=listen-peer-urls={{ $peerScheme }}://0.0.0.0:{{ .Values.k3s.embeddedEtcd.peerPort }} \
+--etcd-arg=listen-client-urls={{ $clientScheme }}://0.0.0.0:{{ .Values.k3s.embeddedEtcd.grpcPort }} \
+--etcd-arg=listen-client-http-urls={{ $clientScheme }}://0.0.0.0:{{ .Values.k3s.embeddedEtcd.httpPort }} \
+--etcd-arg=advertise-client-urls={{ $clientScheme }}://$POD_NAME.{{ include "k3s-server.fullname" . }}:{{ .Values.k3s.embeddedEtcd.grpcPort }} \
+--etcd-arg=initial-advertise-peer-urls={{ $peerScheme }}://$POD_NAME.{{ include "k3s-server.fullname" . }}:{{ .Values.k3s.embeddedEtcd.peerPort }}"
+              {{- end }}
+
               SERVER_ARGS=""
               {{- if .Values.k3s.embeddedEtcd.enabled }}
               ORDINAL="${POD_NAME##*-}"
@@ -135,6 +146,7 @@ spec:
                 --https-listen-port {{ .Values.k3s.apiPort }} \
                 $TLS_SANS \
                 $SERVER_ARGS \
+                $ETCD_ARGS \
                 $EXTRA_ARGS
 
           ports:
@@ -143,13 +155,13 @@ spec:
               protocol: TCP
             {{- if .Values.k3s.embeddedEtcd.enabled }}
             - name: etcd-client
-              containerPort: 2379
+              containerPort: {{ .Values.k3s.embeddedEtcd.grpcPort }}
               protocol: TCP
             - name: etcd-peer
-              containerPort: 2380
+              containerPort: {{ .Values.k3s.embeddedEtcd.peerPort }}
               protocol: TCP
             - name: etcd-metrics
-              containerPort: 2381
+              containerPort: {{ .Values.k3s.embeddedEtcd.httpPort }}
               protocol: TCP
             {{- end }}
 

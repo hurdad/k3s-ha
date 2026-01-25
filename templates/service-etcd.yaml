@@ -24,15 +24,15 @@ spec:
     app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
     - name: etcd-client
-      port: 2379
-      targetPort: 2379
+      port: {{ .Values.k3s.embeddedEtcd.grpcPort }}
+      targetPort: {{ .Values.k3s.embeddedEtcd.grpcPort }}
       protocol: TCP
     - name: etcd-peer
-      port: 2380
-      targetPort: 2380
+      port: {{ .Values.k3s.embeddedEtcd.peerPort }}
+      targetPort: {{ .Values.k3s.embeddedEtcd.peerPort }}
       protocol: TCP
     - name: etcd-metrics
-      port: 2381
-      targetPort: 2381
+      port: {{ .Values.k3s.embeddedEtcd.httpPort }}
+      targetPort: {{ .Values.k3s.embeddedEtcd.httpPort }}
       protocol: TCP
 {{- end }}

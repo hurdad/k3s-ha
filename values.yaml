@@ -110,6 +110,11 @@ k3s:
     keyfile: ""
   embeddedEtcd:
     enabled: false
+    peerScheme: https
+    clientScheme: https
+    peerPort: 2380
+    grpcPort: 2379
+    httpPort: 2381
     service:
       type: ClusterIP # ClusterIP | LoadBalancer | NodePort
       annotations: {}
