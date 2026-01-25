@@ -27,7 +27,6 @@ service:
     loadBalancerSourceRanges: []  # e.g. ["1.2.3.4/32"]
     externalTrafficPolicy: Cluster
   headless:
-    enabled: true
     annotations: {}
 
 # ------------------------------------------------------------

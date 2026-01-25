@@ -125,8 +125,8 @@ spec:
                 echo "Initializing embedded etcd cluster"
                 SERVER_ARGS="--cluster-init"
               else
-                echo "Joining embedded etcd cluster via headless service"
-                SERVER_ARGS="--server https://{{ include "k3s-server.fullname" . }}:{{ .Values.k3s.apiPort }}"
+                echo "Joining embedded etcd cluster via headless DNS"
+                SERVER_ARGS="--server https://{{ include "k3s-server.fullname" . }}-0.{{ include "k3s-server.fullname" . }}:{{ .Values.k3s.apiPort }}"
               fi
               {{- end }}
 

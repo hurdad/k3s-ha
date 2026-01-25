@@ -1,4 +1,3 @@
-{{- if .Values.service.headless.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -21,4 +20,3 @@ spec:
       port: {{ .Values.k3s.apiPort }}
       targetPort: {{ .Values.k3s.apiPort }}
       protocol: TCP
-{{- end }}
