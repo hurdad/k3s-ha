@@ -74,30 +74,30 @@ spec:
                 secretKeyRef:
                   name: {{ default (printf "%s-token" (include "k3s-server.fullname" .)) $existingSecret.name }}
                   key: {{ default "token" $existingSecret.key }}
-            {{ if not .Values.k3s.embeddedEtcd.enabled }}
+            {{- if not .Values.k3s.embeddedEtcd.enabled }}
             - name: K3S_DATASTORE_ENDPOINT
               value: {{ .Values.k3s.datastore.endpoint | quote }}
-            {{ end }}
+            {{- end }}
             - name: K3S_DATA_DIR
               value: /var/lib/rancher/k3s
             - name: K3S_LB_SERVER_PORT
               value: {{ .Values.k3s.lbServerPort | default 6444 | quote }}
-            {{ if .Values.k3s.debug }}
+            {{- if .Values.k3s.debug }}
             - name: K3S_DEBUG
               value: "true"
-            {{ end }}
-            {{ if and (not .Values.k3s.embeddedEtcd.enabled) .Values.k3s.datastore.cafile }}
+            {{- end }}
+            {{- if and (not .Values.k3s.embeddedEtcd.enabled) .Values.k3s.datastore.cafile }}
             - name: K3S_DATASTORE_CAFILE
               value: {{ .Values.k3s.datastore.cafile | quote }}
-            {{ end }}
-            {{ if and (not .Values.k3s.embeddedEtcd.enabled) .Values.k3s.datastore.certfile }}
+            {{- end }}
+            {{- if and (not .Values.k3s.embeddedEtcd.enabled) .Values.k3s.datastore.certfile }}
             - name: K3S_DATASTORE_CERTFILE
               value: {{ .Values.k3s.datastore.certfile | quote }}
-            {{ end }}
-            {{ if and (not .Values.k3s.embeddedEtcd.enabled) .Values.k3s.datastore.keyfile }}
+            {{- end }}
+            {{- if and (not .Values.k3s.embeddedEtcd.enabled) .Values.k3s.datastore.keyfile }}
             - name: K3S_DATASTORE_KEYFILE
               value: {{ .Values.k3s.datastore.keyfile | quote }}
-            {{ end }}
+            {{- end }}
           command:
             - /bin/sh
             - -c
