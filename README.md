@@ -77,6 +77,11 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 | `k3s.datastore.certfile` | Datastore TLS certificate file path | `""` |
 | `k3s.datastore.keyfile` | Datastore TLS key file path | `""` |
 | `k3s.embeddedEtcd.enabled` | Enable embedded etcd mode | `false` |
+| `k3s.embeddedEtcd.peerScheme` | Embedded etcd peer URL scheme | `https` |
+| `k3s.embeddedEtcd.clientScheme` | Embedded etcd client URL scheme | `https` |
+| `k3s.embeddedEtcd.peerPort` | Embedded etcd peer port | `2380` |
+| `k3s.embeddedEtcd.grpcPort` | Embedded etcd gRPC client port | `2379` |
+| `k3s.embeddedEtcd.httpPort` | Embedded etcd HTTP client port | `2381` |
 | `k3s.embeddedEtcd.service.type` | Embedded etcd Service type | `ClusterIP` |
 | `k3s.embeddedEtcd.service.annotations` | Embedded etcd Service annotations | `{}` |
 | `k3s.embeddedEtcd.service.loadBalancerSourceRanges` | Embedded etcd LB source ranges | `[]` |
