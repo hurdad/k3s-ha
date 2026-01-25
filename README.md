@@ -53,7 +53,6 @@ helm uninstall helm-k3s-server -n helm-k3s-server
 | `service.api.annotations` | Service annotations | `{}` |
 | `service.api.loadBalancerSourceRanges` | Allowed source ranges | `[]` |
 | `service.api.externalTrafficPolicy` | External traffic policy | `Cluster` |
-| `service.headless.enabled` | Create a headless service for peer discovery | `true` |
 | `service.headless.annotations` | Headless service annotations | `{}` |
 | `persistence.enabled` | Enable PVCs for local state | `true` |
 | `persistence.size` | PVC size | `20Gi` |
